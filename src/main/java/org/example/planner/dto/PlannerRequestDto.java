@@ -1,7 +1,6 @@
 package org.example.planner.dto;
 
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PlannerRequestDto {
     @NotEmpty(message = "제목을 입력해주세요.")
-    @Size()
     private final String title;
 
     @NotEmpty(message = "내용을 입력해주세요.")
