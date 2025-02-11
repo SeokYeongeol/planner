@@ -17,7 +17,7 @@ public class Planner extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Column(columnDefinition = "long text")
+    @Column(columnDefinition = "longtext")
     private String contents;
 
     @Setter
