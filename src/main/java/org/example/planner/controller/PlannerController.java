@@ -13,7 +13,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/planner")
+@RequestMapping("/planners")
 public class PlannerController {
     private final PlannerService plannerService;
 
