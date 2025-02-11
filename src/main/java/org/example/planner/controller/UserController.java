@@ -1,6 +1,7 @@
 package org.example.planner.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.planner.dto.UpdatePasswordRequestDto;
 import org.example.planner.dto.UserRequestDto;
 import org.example.planner.dto.UserResponseDto;
 import org.example.planner.service.UserService;
@@ -25,6 +26,16 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updatePassword(
+            @PathVariable Long id,
+            @Validated @RequestBody UpdatePasswordRequestDto dto
+    ) {
+        userService.updatePassword(id, dto.getOldPassword(), dto.getNewPassword());
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

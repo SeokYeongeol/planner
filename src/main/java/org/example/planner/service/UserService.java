@@ -4,8 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.example.planner.dto.UserResponseDto;
 import org.example.planner.entity.User;
 import org.example.planner.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Service
@@ -29,5 +31,16 @@ public class UserService {
         User findUser = userRepository.findByIdOrElseThrow(id);
 
         userRepository.delete(findUser);
+    }
+
+    public void updatePassword(Long id, String oldPassword, String newPassword) {
+        User findUser = userRepository.findByIdOrElseThrow(id);
+        
+        // 해당 유저의 비밀번호와 입력한 현재 비밀번호가 같지 않을 때 예외처리
+        if(!findUser.getPassword().equals(oldPassword)) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "입력하신 현재 비밀번호가 같지 않습니다.");
+        }
+
+        findUser.setPassword(newPassword);
     }
 }
