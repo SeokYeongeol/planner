@@ -1,4 +1,4 @@
-package org.example.planner.domain.user.entity;
+package org.example.planner.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

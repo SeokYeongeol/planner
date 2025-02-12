@@ -1,8 +1,8 @@
-package org.example.planner.domain.planner.dto;
+package org.example.planner.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.example.planner.domain.planner.entity.Planner;
+import org.example.planner.entity.Planner;
 
 @Getter
 @RequiredArgsConstructor

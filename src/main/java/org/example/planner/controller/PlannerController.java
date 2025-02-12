@@ -1,9 +1,9 @@
-package org.example.planner.domain.planner.controller;
+package org.example.planner.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.planner.domain.planner.dto.PlannerRequestDto;
-import org.example.planner.domain.planner.dto.PlannerResponseDto;
-import org.example.planner.domain.planner.service.PlannerService;
+import org.example.planner.dto.PlannerRequestDto;
+import org.example.planner.dto.PlannerResponseDto;
+import org.example.planner.service.PlannerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
