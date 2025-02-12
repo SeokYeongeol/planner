@@ -1,10 +1,10 @@
-package org.example.planner.user.service;
+package org.example.planner.service;
 
 import lombok.RequiredArgsConstructor;
 import org.example.planner.config.PasswordEncoder;
-import org.example.planner.user.dto.UserResponseDto;
-import org.example.planner.user.entity.User;
-import org.example.planner.user.repository.UserRepository;
+import org.example.planner.dto.UserResponseDto;
+import org.example.planner.entity.User;
+import org.example.planner.repository.UserRepository;
 import org.example.planner.utils.SessionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

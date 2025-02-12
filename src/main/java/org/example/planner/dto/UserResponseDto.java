@@ -1,4 +1,4 @@
-package org.example.planner.user.dto;
+package org.example.planner.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
