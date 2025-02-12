@@ -1,9 +1,10 @@
-package org.example.planner.entity;
+package org.example.planner.user.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.example.planner.entity.BaseEntity;
 
 @Getter
 @NoArgsConstructor

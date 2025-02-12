@@ -1,6 +1,6 @@
-package org.example.planner.repository;
+package org.example.planner.user.repository;
 
-import org.example.planner.entity.User;
+import org.example.planner.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
