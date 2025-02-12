@@ -1,9 +1,13 @@
 package org.example.planner.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.planner.dto.LoginUserRequestDto;
 import org.example.planner.dto.UpdatePasswordRequestDto;
 import org.example.planner.dto.UserRequestDto;
 import org.example.planner.dto.UserResponseDto;
+import org.example.planner.service.SessionService;
 import org.example.planner.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,16 +19,55 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
+    private final SessionService sessionService;
 
-    @PostMapping("/signUp")
-    public ResponseEntity<UserResponseDto> saveUser(@Validated @RequestBody UserRequestDto dto) {
+    // 회원가입 API
+    @PostMapping("/signup")
+    public ResponseEntity<UserResponseDto> saveUser(
+            @Validated @RequestBody UserRequestDto dto,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
         UserResponseDto responseDto = userService.saveUser(dto.getUsername(), dto.getPassword(), dto.getEmail());
+
+        sessionService.createSession(request, response, responseDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    // 로그인 API
+    @PostMapping("/login")
+    public ResponseEntity<Void> loginUser(
+            @Validated @RequestBody LoginUserRequestDto dto,
+            HttpServletRequest request,
+            HttpServletResponse response
+    ) {
+        UserResponseDto responseDto = sessionService.loginSession(dto.getEmail(), dto.getPassword());
 
+        sessionService.createSession(request, response, responseDto);
 
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 로그아웃 API
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logoutUser(HttpServletRequest request) {
+        sessionService.logoutSession(request);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 현재 세션이 있는지 확인
+    @GetMapping("/sessions")
+    public ResponseEntity<UserResponseDto> currentUser(HttpServletRequest request) {
+        UserResponseDto user = (UserResponseDto) sessionService.getSessionUser(request);
+
+        if(user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 해당 아이디의 유저 확인
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> findById(@PathVariable Long id) {
         return new ResponseEntity<>(userService.findById(id), HttpStatus.OK);
