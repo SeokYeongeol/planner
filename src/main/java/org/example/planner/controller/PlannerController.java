@@ -26,14 +26,17 @@ public class PlannerController {
 
     // 일정 전체 조회 API
     @GetMapping
-    public ResponseEntity<List<PlannerResponseDto>> findAll() {
-        return new ResponseEntity<>(plannerService.findAll(), HttpStatus.OK);
+    public ResponseEntity<List<PlannerResponseDto>> findAll(@RequestParam String username) {
+        return new ResponseEntity<>(plannerService.findAll(username), HttpStatus.OK);
     }
 
     // 일정 단건 조회 API
     @GetMapping("/{id}")
-    public ResponseEntity<PlannerResponseDto> findById(@PathVariable Long id) {
-        return new ResponseEntity<>(plannerService.findById(id), HttpStatus.OK);
+    public ResponseEntity<PlannerResponseDto> findById(
+            @PathVariable Long id,
+            @RequestParam String username
+    ) {
+        return new ResponseEntity<>(plannerService.findById(id, username), HttpStatus.OK);
     }
 
     // 일정 수정 API
@@ -42,15 +45,18 @@ public class PlannerController {
             @PathVariable Long id,
             @Validated @RequestBody PlannerRequestDto dto
     ) {
-        PlannerResponseDto responseDto = plannerService.updateById(id, dto.getTitle(), dto.getContents());
+        PlannerResponseDto responseDto = plannerService.updateById(id, dto.getTitle(), dto.getContents(), dto.getUsername());
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
     // 일정 삭제 API
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteById(@PathVariable Long id) {
-        plannerService.deleteById(id);
+    public ResponseEntity<Void> deleteById(
+            @PathVariable Long id,
+            @RequestParam String username
+    ) {
+        plannerService.deleteById(id, username);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

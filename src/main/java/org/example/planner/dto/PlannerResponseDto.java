@@ -13,6 +13,6 @@ public class PlannerResponseDto {
 
     // 싱글톤 패턴으로 쉽게 접근을 위한 메서드
     public static PlannerResponseDto toDto(Planner planner) {
-        return new PlannerResponseDto(planner.getTitle(), planner.getContents(), planner.getUser().getUsername());
+        return new PlannerResponseDto(planner.getTitle(), planner.getContents(), planner.getUsername());
     }
 }

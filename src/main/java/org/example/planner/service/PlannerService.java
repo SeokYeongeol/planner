@@ -38,22 +38,33 @@ public class PlannerService {
                 savedPlanner.getUsername());
     }
 
-    // 일정 전체 조회 메서드
-    public List<PlannerResponseDto> findAll() {
+    // 일정 전체 조회 메서드 (특정 이름 검색)
+    public List<PlannerResponseDto> findAll(String username) {
         if(!sessionUtils.isLoggedIn()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인을 해주세요");
         }
 
-        return plannerRepository.findAll()
+        // 유저 존재 여부 확인
+        if(!userRepository.existsByUsername(username)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이름의 사용자가 없습니다.");
+        }
+
+        return plannerRepository.findAllByUserUsername(username)
                 .stream()
                 .map(PlannerResponseDto::toDto)
                 .toList();
     }
 
     // 일정 단건 조회 메서드
-    public PlannerResponseDto findById(Long id) {
+    public PlannerResponseDto findById(Long id, String username) {
+        // 로그인 상태 확인
         if(!sessionUtils.isLoggedIn()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인을 해주세요");
+        }
+
+        // 유저 존재 여부 확인
+        if(!userRepository.existsByUsername(username)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이름의 사용자가 없습니다.");
         }
 
         Planner findPlanner = plannerRepository.findByIdOrElseThrow(id);
@@ -65,25 +76,30 @@ public class PlannerService {
 
     // 일정 수정 메서드
     @Transactional
-    public PlannerResponseDto updateById(Long id, String title, String contents) {
+    public PlannerResponseDto updateById(Long id, String title, String contents, String username) {
         if(!sessionUtils.isLoggedIn()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인을 해주세요");
+        }
+
+        // 유저 존재 여부 확인
+        if(!userRepository.existsByUsername(username)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 이름의 사용자가 없습니다.");
         }
 
         Planner findPlanner = plannerRepository.findByIdOrElseThrow(id);
         findPlanner.update(title, contents);
 
-        return new PlannerResponseDto(title, contents, findPlanner.getUsername());
+        return new PlannerResponseDto(title, contents, username);
     }
 
     // 일정 삭제 메서드
     @Transactional
-    public void deleteById(Long id) {
+    public void deleteById(Long id, String username) {
         if(!sessionUtils.isLoggedIn()) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인을 해주세요");
         }
 
-        Planner findPlanner = plannerRepository.findByIdOrElseThrow(id);
+        Planner findPlanner = plannerRepository.findByIdAndUserUsernameOrElseThrow(id, username);
 
         plannerRepository.delete(findPlanner);
     }
