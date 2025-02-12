@@ -34,4 +34,8 @@ public class Planner extends BaseEntity {
         this.title = title;
         this.contents = contents;
     }
+
+    public String getUsername() {
+        return this.user.getUsername();
+    }
 }

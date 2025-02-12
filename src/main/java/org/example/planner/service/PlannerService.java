@@ -3,7 +3,9 @@ package org.example.planner.service;
 import lombok.RequiredArgsConstructor;
 import org.example.planner.dto.PlannerResponseDto;
 import org.example.planner.entity.Planner;
+import org.example.planner.entity.User;
 import org.example.planner.repository.PlannerRepository;
+import org.example.planner.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,14 +15,18 @@ import java.util.List;
 @Service
 public class PlannerService {
     private final PlannerRepository plannerRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public PlannerResponseDto savePlanner(String title, String contents) {
+    public PlannerResponseDto savePlanner(String title, String contents, String username) {
+        User findUser = userRepository.findUserByUsernameOrElseThrow(username);
+
         Planner savedPlanner = plannerRepository.save(new Planner(title, contents));
+        savedPlanner.setUser(findUser);
 
         return new PlannerResponseDto(savedPlanner.getTitle(),
                 savedPlanner.getContents(),
-                savedPlanner.getUser().getUsername());
+                savedPlanner.getUsername());
     }
 
     public List<PlannerResponseDto> findAll() {
@@ -35,7 +41,7 @@ public class PlannerService {
 
         return new PlannerResponseDto(findPlanner.getTitle(),
                 findPlanner.getContents(),
-                findPlanner.getUser().getUsername());
+                findPlanner.getUsername());
     }
 
     @Transactional
@@ -43,7 +49,7 @@ public class PlannerService {
         Planner findPlanner = plannerRepository.findByIdOrElseThrow(id);
         findPlanner.update(title, contents);
 
-        return new PlannerResponseDto(title, contents, findPlanner.getUser().getUsername());
+        return new PlannerResponseDto(title, contents, findPlanner.getUsername());
     }
 
     @Transactional

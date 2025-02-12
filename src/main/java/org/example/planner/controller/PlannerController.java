@@ -19,7 +19,7 @@ public class PlannerController {
 
     @PostMapping
     public ResponseEntity<PlannerResponseDto> savePlanner(@Validated @RequestBody PlannerRequestDto dto) {
-        PlannerResponseDto responseDto = plannerService.savePlanner(dto.getTitle(), dto.getContents());
+        PlannerResponseDto responseDto = plannerService.savePlanner(dto.getTitle(), dto.getContents(), dto.getUsername());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
