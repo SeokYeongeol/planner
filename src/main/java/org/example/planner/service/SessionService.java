@@ -10,7 +10,6 @@ import org.example.planner.entity.User;
 import org.example.planner.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
@@ -19,7 +18,6 @@ public class SessionService {
     private final UserRepository userRepository;
 
     // 세션 생성 메서드
-    @Transactional
     public void createSession(
             HttpServletRequest request,
             HttpServletResponse response,
@@ -47,7 +45,6 @@ public class SessionService {
     }
 
     // 세션 로그인
-    @Transactional
     public UserResponseDto loginSession(String email, String password) {
         User findUser = userRepository.findUserByEmailOrElseThrow(email);
 
@@ -59,7 +56,6 @@ public class SessionService {
     }
 
     // 세션 로그아웃
-    @Transactional
     public void logoutSession(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
 
