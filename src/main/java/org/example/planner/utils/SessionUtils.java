@@ -1,4 +1,4 @@
-package org.example.planner.service;
+package org.example.planner.utils;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,11 +10,13 @@ import org.example.planner.entity.User;
 import org.example.planner.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Service
-public class SessionService {
+public class SessionUtils {
     private final UserRepository userRepository;
 
     // 세션 생성 메서드
@@ -44,11 +46,24 @@ public class SessionService {
         return session.getAttribute("user");
     }
 
+    // 현재 상태의 HttpServletRequest를 가져오는 메서드
+    private static HttpServletRequest currentRequest() {
+        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    }
+
+    // 로그인 상태인지 확인해 상황을 결정할 메서드
+    public boolean isLoggedIn() {
+        Object user = getSessionUser(currentRequest());
+
+        return user != null;
+    }
+
     // 세션 로그인
     public UserResponseDto loginSession(String email, String password) {
         User findUser = userRepository.findUserByEmailOrElseThrow(email);
 
-        if(!findUser.equalsPassword(password)) {
+        // 해당 유저의 비밀번호와 입력한 현재 비밀번호가 같지 않을 때 예외처리
+        if(findUser.equalPassword(password)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다.");
         }
 

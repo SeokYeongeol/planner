@@ -7,7 +7,7 @@ import org.example.planner.dto.LoginUserRequestDto;
 import org.example.planner.dto.UpdatePasswordRequestDto;
 import org.example.planner.dto.UserRequestDto;
 import org.example.planner.dto.UserResponseDto;
-import org.example.planner.service.SessionService;
+import org.example.planner.utils.SessionUtils;
 import org.example.planner.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private final SessionService sessionService;
+    private final SessionUtils sessionUtils;
 
     // 회원가입 API
     @PostMapping("/signup")
@@ -30,7 +30,7 @@ public class UserController {
     ) {
         UserResponseDto responseDto = userService.saveUser(dto.getUsername(), dto.getPassword(), dto.getEmail());
 
-        sessionService.createSession(request, response, responseDto);
+        sessionUtils.createSession(request, response, responseDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -42,9 +42,9 @@ public class UserController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        UserResponseDto responseDto = sessionService.loginSession(dto.getEmail(), dto.getPassword());
+        UserResponseDto responseDto = sessionUtils.loginSession(dto.getEmail(), dto.getPassword());
 
-        sessionService.createSession(request, response, responseDto);
+        sessionUtils.createSession(request, response, responseDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -52,7 +52,7 @@ public class UserController {
     // 로그아웃 API
     @PostMapping("/logout")
     public ResponseEntity<Void> logoutUser(HttpServletRequest request) {
-        sessionService.logoutSession(request);
+        sessionUtils.logoutSession(request);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -60,7 +60,7 @@ public class UserController {
     // 현재 세션이 있는지 확인
     @GetMapping("/sessions")
     public ResponseEntity<UserResponseDto> currentUser(HttpServletRequest request) {
-        UserResponseDto user = (UserResponseDto) sessionService.getSessionUser(request);
+        UserResponseDto user = (UserResponseDto) sessionUtils.getSessionUser(request);
 
         if(user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 

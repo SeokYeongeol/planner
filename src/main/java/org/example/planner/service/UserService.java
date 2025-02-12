@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.planner.dto.UserResponseDto;
 import org.example.planner.entity.User;
 import org.example.planner.repository.UserRepository;
+import org.example.planner.utils.SessionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final SessionUtils sessionUtils;
 
     // 유저 생성 메서드
     @Transactional
@@ -32,10 +34,14 @@ public class UserService {
     // 비밀번호 변경 메서드
     @Transactional
     public void updatePassword(Long id, String oldPassword, String newPassword) {
+        if(!sessionUtils.isLoggedIn()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인을 해주세요");
+        }
+
         User findUser = userRepository.findByIdOrElseThrow(id);
 
         // 해당 유저의 비밀번호와 입력한 현재 비밀번호가 같지 않을 때 예외처리
-        if(!findUser.equalsPassword(oldPassword)) {
+        if(findUser.equalPassword(oldPassword)) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "입력하신 현재 비밀번호가 같지 않습니다.");
         }
 
@@ -45,6 +51,10 @@ public class UserService {
     // 해당 유저 삭제 메서드
     @Transactional
     public void delete(Long id) {
+        if(!sessionUtils.isLoggedIn()) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인을 해주세요");
+        }
+
         User findUser = userRepository.findByIdOrElseThrow(id);
 
         userRepository.delete(findUser);

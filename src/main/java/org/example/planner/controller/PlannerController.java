@@ -17,22 +17,26 @@ import java.util.List;
 public class PlannerController {
     private final PlannerService plannerService;
 
+    // 일정 생성 API
     @PostMapping
     public ResponseEntity<PlannerResponseDto> savePlanner(@Validated @RequestBody PlannerRequestDto dto) {
         PlannerResponseDto responseDto = plannerService.savePlanner(dto.getTitle(), dto.getContents(), dto.getUsername());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
+    // 일정 전체 조회 API
     @GetMapping
     public ResponseEntity<List<PlannerResponseDto>> findAll() {
         return new ResponseEntity<>(plannerService.findAll(), HttpStatus.OK);
     }
 
+    // 일정 단건 조회 API
     @GetMapping("/{id}")
     public ResponseEntity<PlannerResponseDto> findById(@PathVariable Long id) {
         return new ResponseEntity<>(plannerService.findById(id), HttpStatus.OK);
     }
 
+    // 일정 수정 API
     @PutMapping("/{id}")
     public ResponseEntity<PlannerResponseDto> updateById(
             @PathVariable Long id,
@@ -43,6 +47,7 @@ public class PlannerController {
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 
+    // 일정 삭제 API
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         plannerService.deleteById(id);

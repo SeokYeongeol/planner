@@ -21,7 +21,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     public User(String username, String password, String email) {
@@ -31,7 +31,7 @@ public class User extends BaseEntity {
     }
 
     // 두 비밀번호가 같은지 확인하는 메서드
-    public boolean equalsPassword(String password) {
-        return this.password.equals(password);
+    public boolean equalPassword(String password) {
+        return !this.password.equals(password);
     }
 }
