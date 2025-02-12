@@ -3,6 +3,7 @@ package org.example.planner.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.example.planner.config.PasswordEncoder;
 import org.example.planner.dto.LoginUserRequestDto;
 import org.example.planner.dto.UpdatePasswordRequestDto;
 import org.example.planner.dto.UserRequestDto;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final SessionUtils sessionUtils;
+    private final PasswordEncoder passwordEncoder;
 
     // 회원가입 API
     @PostMapping("/signup")
@@ -28,7 +30,9 @@ public class UserController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        UserResponseDto responseDto = userService.saveUser(dto.getUsername(), dto.getPassword(), dto.getEmail());
+        UserResponseDto responseDto = userService.saveUser(dto.getUsername(),
+                passwordEncoder.encode(dto.getPassword()),
+                dto.getEmail());
 
         sessionUtils.createSession(request, response, responseDto);
 

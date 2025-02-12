@@ -1,6 +1,7 @@
 package org.example.planner.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.planner.config.PasswordEncoder;
 import org.example.planner.dto.UserResponseDto;
 import org.example.planner.entity.User;
 import org.example.planner.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class UserService {
     private final UserRepository userRepository;
     private final SessionUtils sessionUtils;
+    private final PasswordEncoder passwordEncoder;
 
     // 유저 생성 메서드
     @Transactional
@@ -41,11 +43,11 @@ public class UserService {
         User findUser = userRepository.findByIdOrElseThrow(id);
 
         // 해당 유저의 비밀번호와 입력한 현재 비밀번호가 같지 않을 때 예외처리
-        if(findUser.equalPassword(oldPassword)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "입력하신 현재 비밀번호가 같지 않습니다.");
+        if(passwordEncoder.matches(passwordEncoder.encode(oldPassword), findUser.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "입력하신 비밀번호가 일치하지 않습니다.");
         }
 
-        findUser.setPassword(newPassword);
+        findUser.setPassword(passwordEncoder.encode(newPassword));
     }
 
     // 해당 유저 삭제 메서드

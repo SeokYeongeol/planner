@@ -5,6 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.example.planner.config.PasswordEncoder;
 import org.example.planner.dto.UserResponseDto;
 import org.example.planner.entity.User;
 import org.example.planner.repository.UserRepository;
@@ -18,6 +19,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Service
 public class SessionUtils {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 세션 생성 메서드
     public void createSession(
@@ -63,8 +65,8 @@ public class SessionUtils {
         User findUser = userRepository.findUserByEmailOrElseThrow(email);
 
         // 해당 유저의 비밀번호와 입력한 현재 비밀번호가 같지 않을 때 예외처리
-        if(findUser.equalPassword(password)) {
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "비밀번호가 틀렸습니다.");
+        if(!passwordEncoder.matches(passwordEncoder.encode(password), findUser.getPassword())) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "입력하신 비밀번호가 일치하지 않습니다.");
         }
 
         return new UserResponseDto(findUser.getId(), findUser.getEmail(), findUser.getPassword());
