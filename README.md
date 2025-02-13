@@ -15,11 +15,12 @@
 <br>
 
 ## 🔍 Tech Stack
-<img src="https://github.com/yewon-Noh/readme-template/raw/main/skills/Java.png?raw=true" width=120>
+<div>
+  <img src="https://github.com/yewon-Noh/readme-template/raw/main/skills/Java.png?raw=true" width=120>
   <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringBoot.png?raw=true" width="120">
   <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/SpringDataJPA.png?raw=true" width="120">
   <img src="https://github.com/yewon-Noh/readme-template/blob/main/skills/Mysql.png?raw=true" width="120">
-
+</div>
 <br>
 
 ## 🏹 Trouble Shooting
@@ -29,6 +30,7 @@
 
 <br>
 
+## 🎫 API
 | 기능            | Method | URL           | Request                                                               | Response                                                                                | Status Code                                    |
 |---------------|--------|---------------|-----------------------------------------------------------------------|-----------------------------------------------------------------------------------------|------------------------------------------------|
 |유저 회원가입| POST   |/api/users/signup| {"username" : "이름"<br>"password" : "1234"<br>"email" : "ab12@abc.com" | {"id" : 1<br>"username" : "이름"<br>"email" : "ab12@abc.com"}                             | 응답 성공 시 : 200<br>조건 충족 안할 시 : 400              |
@@ -46,5 +48,5 @@
 
 <br>
 
-## ERD
+## 📦 ERD
 ![img.png](img.png)
