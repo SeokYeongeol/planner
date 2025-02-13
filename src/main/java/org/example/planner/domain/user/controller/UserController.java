@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @RestController
@@ -66,7 +67,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> currentUser(HttpServletRequest request) {
         UserResponseDto user = (UserResponseDto) sessionUtils.getSessionUser(request);
 
-        if(user == null) return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        if(user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 상태가 아닙니다.");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
