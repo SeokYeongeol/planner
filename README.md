@@ -9,8 +9,8 @@
 <br>
 
 ## 🛠 과제 설명
-- Enum 클래스를 사용해 할인 유형을 나눔
-- 장바구니와 메뉴 클래스에 제네릭을 사용해 코드의 유연성을 올림
+- Session / Cookie를 받아 유저의 회원가입, 로그인 인증/인가
+- 유저가 Session을 받은 상태일 때만 일정을 CRUD 가능
 
 <br>
 
@@ -24,9 +24,9 @@
 <br>
 
 ## 🏹 Trouble Shooting
-**쇼핑 카트의 지정 메뉴 삭제**
+**HttpServletRequest 없이 세션 가져오기**
 
-트러블슈팅 링크 : <[)>
+트러블슈팅 링크 : <[https://velog.io/@cheoni5417/Trouble-Shooting-%ED%98%84%EC%9E%AC-%EC%84%B8%EC%85%98%EC%9D%84-HttpServletRequest-%EB%A7%A4%EA%B0%9C%EB%B3%80%EC%88%98-%EC%97%86%EC%9D%B4-%EA%B0%80%EC%A0%B8%EC%98%A4%EA%B8%B0)>
 
 <br>
 
