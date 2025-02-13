@@ -12,7 +12,4 @@ public class PlannerRequestDto {
 
     @NotEmpty(message = "내용을 입력해주세요.")
     private String contents;
-
-    @NotEmpty(message = "유저 이름을 입력해주세요.")
-    private String username;
 }

@@ -1,23 +1,23 @@
-package org.example.planner.utils;
+package org.example.planner.domain.user.service;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.example.planner.config.PasswordEncoder;
 import org.example.planner.domain.user.dto.UserResponseDto;
 import org.example.planner.domain.user.entity.User;
 import org.example.planner.domain.user.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.server.ResponseStatusException;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
-public class SessionUtils {
+public class LoginService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,7 +29,7 @@ public class SessionUtils {
     ) {
         // 세션 생성 및 유지 시간 30분으로 지정
         HttpSession session = request.getSession(true);
-        session.setAttribute("user", user);
+        session.setAttribute("LOGIN_USER", user.getId());
         session.setMaxInactiveInterval(60 * 30);
 
         // 쿠키
@@ -45,19 +45,7 @@ public class SessionUtils {
 
         if(session == null) return null;
 
-        return session.getAttribute("user");
-    }
-
-    // 현재 상태의 HttpServletRequest를 가져오는 메서드
-    private static HttpServletRequest currentRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    }
-
-    // 로그인 상태인지 확인해 상황을 결정할 메서드
-    public boolean isLoggedIn() {
-        Object user = getSessionUser(currentRequest());
-
-        return user != null;
+        return session.getAttribute("LOGIN_USER");
     }
 
     // 세션 로그인
@@ -65,11 +53,16 @@ public class SessionUtils {
         User findUser = userRepository.findUserByEmailOrElseThrow(email);
 
         // 해당 유저의 비밀번호와 입력한 현재 비밀번호가 같지 않을 때 예외처리
-        if(!passwordEncoder.matches(passwordEncoder.encode(password), findUser.getPassword())) {
+        if(!passwordEncoder.matches(password, findUser.getPassword())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "입력하신 비밀번호가 일치하지 않습니다.");
         }
 
-        return new UserResponseDto(findUser.getId(), findUser.getEmail(), findUser.getPassword());
+        return new UserResponseDto(
+                findUser.getId(),
+                findUser.getUsername(),
+                findUser.getEmail(),
+                findUser.getCreatedAt(),
+                findUser.getModifiedAt());
     }
 
     // 세션 로그아웃

@@ -31,8 +31,9 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-    // 두 비밀번호가 같은지 확인하는 메서드
-    public boolean equalPassword(String password) {
-        return !this.password.equals(password);
+    private User(Long id) { this.id = id; }
+
+    public static User fromUserId(Long id) {
+        return new User(id);
     }
 }

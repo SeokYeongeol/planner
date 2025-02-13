@@ -1,6 +1,7 @@
 package org.example.planner.domain.planner.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.planner.consts.Const;
 import org.example.planner.domain.planner.dto.PlannerRequestDto;
 import org.example.planner.domain.planner.dto.PlannerResponseDto;
 import org.example.planner.domain.planner.service.PlannerService;
@@ -19,33 +20,39 @@ public class PlannerController {
 
     // 일정 생성 API
     @PostMapping
-    public ResponseEntity<PlannerResponseDto> savePlanner(@Validated @RequestBody PlannerRequestDto dto) {
-        PlannerResponseDto responseDto = plannerService.savePlanner(dto.getTitle(), dto.getContents(), dto.getUsername());
+    public ResponseEntity<PlannerResponseDto> savePlanner(
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
+            @Validated @RequestBody PlannerRequestDto dto
+    ) {
+        PlannerResponseDto responseDto = plannerService.savePlanner(userId, dto.getTitle(), dto.getContents());
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
 
     // 일정 전체 조회 API
     @GetMapping
-    public ResponseEntity<List<PlannerResponseDto>> findAll(@RequestParam String username) {
-        return new ResponseEntity<>(plannerService.findAll(username), HttpStatus.OK);
+    public ResponseEntity<List<PlannerResponseDto>> findAll(
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId
+    ) {
+        return new ResponseEntity<>(plannerService.findAll(userId), HttpStatus.OK);
     }
 
     // 일정 단건 조회 API
     @GetMapping("/{id}")
     public ResponseEntity<PlannerResponseDto> findById(
             @PathVariable Long id,
-            @RequestParam String username
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId
     ) {
-        return new ResponseEntity<>(plannerService.findById(id, username), HttpStatus.OK);
+        return new ResponseEntity<>(plannerService.findById(id, userId), HttpStatus.OK);
     }
 
     // 일정 수정 API
     @PutMapping("/{id}")
     public ResponseEntity<PlannerResponseDto> updateById(
             @PathVariable Long id,
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId,
             @Validated @RequestBody PlannerRequestDto dto
     ) {
-        PlannerResponseDto responseDto = plannerService.updateById(id, dto.getTitle(), dto.getContents(), dto.getUsername());
+        PlannerResponseDto responseDto = plannerService.updateById(id, userId, dto.getTitle(), dto.getContents());
 
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
@@ -54,9 +61,9 @@ public class PlannerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteById(
             @PathVariable Long id,
-            @RequestParam String username
+            @SessionAttribute(name = Const.LOGIN_USER) Long userId
     ) {
-        plannerService.deleteById(id, username);
+        plannerService.deleteById(id, userId);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

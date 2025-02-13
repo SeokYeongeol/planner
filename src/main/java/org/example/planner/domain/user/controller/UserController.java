@@ -4,11 +4,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.planner.config.PasswordEncoder;
-import org.example.planner.domain.user.dto.LoginUserRequestDto;
-import org.example.planner.domain.user.dto.UpdatePasswordRequestDto;
-import org.example.planner.domain.user.dto.UserRequestDto;
-import org.example.planner.domain.user.dto.UserResponseDto;
-import org.example.planner.utils.SessionUtils;
+import org.example.planner.domain.user.dto.*;
+import org.example.planner.domain.user.service.LoginService;
 import org.example.planner.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +18,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private final SessionUtils sessionUtils;
+    private final LoginService loginService;
     private final PasswordEncoder passwordEncoder;
 
     // 회원가입 API
@@ -35,7 +32,7 @@ public class UserController {
                 passwordEncoder.encode(dto.getPassword()),
                 dto.getEmail());
 
-        sessionUtils.createSession(request, response, responseDto);
+        loginService.createSession(request, response, responseDto);
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED);
     }
@@ -47,9 +44,9 @@ public class UserController {
             HttpServletRequest request,
             HttpServletResponse response
     ) {
-        UserResponseDto responseDto = sessionUtils.loginSession(dto.getEmail(), dto.getPassword());
+        UserResponseDto responseDto = loginService.loginSession(dto.getEmail(), dto.getPassword());
 
-        sessionUtils.createSession(request, response, responseDto);
+        loginService.createSession(request, response, responseDto);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -57,7 +54,7 @@ public class UserController {
     // 로그아웃 API
     @PostMapping("/logout")
     public ResponseEntity<Void> logoutUser(HttpServletRequest request) {
-        sessionUtils.logoutSession(request);
+        loginService.logoutSession(request);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -65,7 +62,7 @@ public class UserController {
     // 현재 세션이 있는지 확인
     @GetMapping("/sessions")
     public ResponseEntity<UserResponseDto> currentUser(HttpServletRequest request) {
-        UserResponseDto user = (UserResponseDto) sessionUtils.getSessionUser(request);
+        UserResponseDto user = (UserResponseDto) loginService.getSessionUser(request);
 
         if(user == null) throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인 상태가 아닙니다.");
 

@@ -3,7 +3,6 @@ package org.example.planner.domain.planner.entity;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.example.planner.domain.user.entity.User;
 import org.example.planner.entity.BaseEntity;
 
@@ -22,12 +21,12 @@ public class Planner extends BaseEntity {
     @Column(columnDefinition = "longtext")
     private String contents;
 
-    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    public Planner(String title, String contents) {
+    public Planner(User user, String title, String contents) {
+        this.user = user;
         this.title = title;
         this.contents = contents;
     }
@@ -37,7 +36,7 @@ public class Planner extends BaseEntity {
         this.contents = contents;
     }
 
-    public String getUsername() {
-        return this.user.getUsername();
+    public Long getUserId() {
+        return this.user.getId();
     }
 }
