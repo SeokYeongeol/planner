@@ -1,4 +1,4 @@
-package org.example.planner.dto;
+package org.example.planner.domain.user.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

@@ -1,11 +1,11 @@
-package org.example.planner.service;
+package org.example.planner.domain.planner.service;
 
 import lombok.RequiredArgsConstructor;
-import org.example.planner.dto.PlannerResponseDto;
-import org.example.planner.entity.Planner;
-import org.example.planner.entity.User;
-import org.example.planner.repository.PlannerRepository;
-import org.example.planner.repository.UserRepository;
+import org.example.planner.domain.planner.dto.PlannerResponseDto;
+import org.example.planner.domain.planner.entity.Planner;
+import org.example.planner.domain.user.entity.User;
+import org.example.planner.domain.planner.repository.PlannerRepository;
+import org.example.planner.domain.user.repository.UserRepository;
 import org.example.planner.utils.SessionUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

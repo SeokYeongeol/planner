@@ -1,15 +1,15 @@
-package org.example.planner.controller;
+package org.example.planner.domain.user.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.example.planner.config.PasswordEncoder;
-import org.example.planner.dto.LoginUserRequestDto;
-import org.example.planner.dto.UpdatePasswordRequestDto;
-import org.example.planner.dto.UserRequestDto;
-import org.example.planner.dto.UserResponseDto;
+import org.example.planner.domain.user.dto.LoginUserRequestDto;
+import org.example.planner.domain.user.dto.UpdatePasswordRequestDto;
+import org.example.planner.domain.user.dto.UserRequestDto;
+import org.example.planner.domain.user.dto.UserResponseDto;
 import org.example.planner.utils.SessionUtils;
-import org.example.planner.service.UserService;
+import org.example.planner.domain.user.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
