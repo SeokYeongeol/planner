@@ -33,7 +33,8 @@ public class PlannerService {
         Planner savedPlanner = plannerRepository.save(new Planner(title, contents));
         savedPlanner.setUser(findUser);
 
-        return new PlannerResponseDto(savedPlanner.getTitle(),
+        return new PlannerResponseDto(savedPlanner.getId(),
+                savedPlanner.getTitle(),
                 savedPlanner.getContents(),
                 savedPlanner.getUsername());
     }
@@ -69,7 +70,8 @@ public class PlannerService {
 
         Planner findPlanner = plannerRepository.findByIdOrElseThrow(id);
 
-        return new PlannerResponseDto(findPlanner.getTitle(),
+        return new PlannerResponseDto(findPlanner.getId(),
+                findPlanner.getTitle(),
                 findPlanner.getContents(),
                 findPlanner.getUsername());
     }
@@ -89,7 +91,7 @@ public class PlannerService {
         Planner findPlanner = plannerRepository.findByIdOrElseThrow(id);
         findPlanner.update(title, contents);
 
-        return new PlannerResponseDto(title, contents, username);
+        return new PlannerResponseDto(findPlanner.getId(), title, contents, username);
     }
 
     // 일정 삭제 메서드
