@@ -2,17 +2,18 @@ package org.example.planner.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.util.PatternMatchUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
 
 @RequiredArgsConstructor
 public class LoginFilter implements Filter {
     // 로그인 요청을 하지 않아도 되는 URI
-    private static final String[] WHITE_LIST = {"/", "/users/signup","/users/login" ,"/users/logout"};
+    private static final String[] WHITE_LIST = {"/", "/users/signup","/users/login"};
 
     @Override
     public void doFilter(ServletRequest servletRequest,
@@ -21,7 +22,6 @@ public class LoginFilter implements Filter {
     {
         // 다양한 기능 사용을 위한 다운 캐스팅
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String requestURI = request.getRequestURI();
 
@@ -30,11 +30,11 @@ public class LoginFilter implements Filter {
             HttpSession session = request.getSession(false);
 
             if(session == null || session.getAttribute("user") == null) {
-                throw new RuntimeException("로그인을 해주세요.");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "로그인을 해주세요.");
             }
         }
 
-        filterChain.doFilter(request, response);
+        filterChain.doFilter(servletRequest, servletResponse);
     }
 
     // 로그인 여부를 확인하는 URI인지 확인하는 메서드
