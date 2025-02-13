@@ -9,7 +9,7 @@ import org.example.planner.entity.BaseEntity;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "planner")
+@Table(name = "planners")
 public class Planner extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,8 +21,8 @@ public class Planner extends BaseEntity {
     @Column(columnDefinition = "longtext")
     private String contents;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Planner(User user, String title, String contents) {

@@ -9,7 +9,7 @@ import org.example.planner.entity.BaseEntity;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
